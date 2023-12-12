@@ -14,14 +14,23 @@ class Video:
     youtube = build('youtube', 'v3', developerKey=KEY)
 
     def __init__(self, video_id: str) -> None:
-        self.video_id = video_id
-        self.video_response = self.youtube.videos().list(part='snippet,statistics,contentDetails,topicDetails',
-                                                         id=self.video_id
-                                                         ).execute()
-        self.video_title: str = self.video_response['items'][0]['snippet']['title']
-        self.video_url: str = 'https://youtu.be/gaoc9MPZ4bw'
-        self.view_count: int = self.video_response['items'][0]['statistics']['viewCount']
-        self.like_count: int = self.video_response['items'][0]['statistics']['likeCount']
+        try:
+            self.video_id = video_id
+
+            self.video_response = self.youtube.videos().list(part='snippet,statistics,contentDetails,topicDetails',
+                                                             id=self.video_id
+                                                             ).execute()
+            if not self.video_response['items']:
+                self.video_title = None
+            else:
+                self.video_title: str = self.video_response['items'][0]['snippet']['title']
+                self.video_url: str = 'https://youtu.be/gaoc9MPZ4bw'
+                self.view_count: int = self.video_response['items'][0]['statistics']['viewCount']
+                self.like_count: int = self.video_response['items'][0]['statistics']['likeCount']
+        except IndexError as er:
+            print(er)
+        except AttributeError as er:
+            print(er)
 
     def print_info(self) -> None:
         """Выводит в консоль информацию о канале."""
