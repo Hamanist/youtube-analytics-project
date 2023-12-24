@@ -42,7 +42,7 @@ class Video:
         return list_info
 
     def __str__(self):
-        return f'{self.video_title}'
+        return f'{self.title}'
 
 
 class PLVideo(Video):
